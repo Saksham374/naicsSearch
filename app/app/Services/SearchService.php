@@ -17,9 +17,19 @@ class SearchService
 
     public function search(string $keyword): array
     {
-        $keyword = trim(strtolower($keyword));
+        $originalKeyword = trim($keyword);
+        $keyword = strtolower($originalKeyword);
 
         $words = array_filter(explode(' ', $keyword));
+
+        if ($originalKeyword === '' || empty($words)) {
+            return [
+                'NAICS' => 0,
+                'names' => [],
+                'search' => $originalKeyword,
+                'image_path' => null,
+            ];
+        }
 
         $naicsScores = [];
 
@@ -192,7 +202,7 @@ class SearchService
         |--------------------------------------------------------------------------
         */
         return $this->aiSearchService->rankResults(
-            $keyword,
+            $originalKeyword,
             $results
         );
     }

@@ -35,7 +35,10 @@ return [
         ],
     ],
     'gemini' => [
-    'key' => env('GEMINI_API_KEY'),
-],
+        'key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+        'timeout' => env('GEMINI_TIMEOUT', 8),
+        'candidate_limit' => env('GEMINI_CANDIDATE_LIMIT', 15),
+    ],
 
 ];
