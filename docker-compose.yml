@@ -1,0 +1,73 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+
+    container_name: naics_app
+
+    volumes:
+      - ./app:/var/www
+
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:latest
+
+    container_name: naics_nginx
+
+    ports:
+      - "8000:80"
+
+    volumes:
+      - ./app:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8
+
+    container_name: naics_mysql
+
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: naics
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+
+    container_name: naics_redis
+
+    ports:
+      - "6379:6379"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+
+    container_name: naics_phpmyadmin
+
+    ports:
+      - "8080:80"
+
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+
+    depends_on:
+      - mysql
+volumes:
+  mysql_data:
+
+ 
